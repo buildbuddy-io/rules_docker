@@ -30,6 +30,7 @@ load(
     "//repositories:go_repositories.bzl",
     _go_deps = "go_deps",
 )
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 # Load the resolved digests.
 load(":python.bzl", "DIGESTS")
