@@ -16,7 +16,6 @@
 The signature of this rule is compatible with py_binary.
 """
 
-load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load(
     "//container:container.bzl",
     "container_pull",
