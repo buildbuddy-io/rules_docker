@@ -16,7 +16,6 @@
 The signature of this rule is compatible with py_binary.
 """
 
-load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load(
     "//container:container.bzl",
     "container_pull",
@@ -30,6 +29,7 @@ load(
     "//repositories:go_repositories.bzl",
     _go_deps = "go_deps",
 )
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 
 # Load the resolved digests.
 load(":python.bzl", "DIGESTS")
