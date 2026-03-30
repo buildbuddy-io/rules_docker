@@ -795,12 +795,12 @@ _outputs["build_script"] = "%{name}.executable"
 
 def _image_transition_impl(settings, attr):
     if not settings["@io_bazel_rules_docker//transitions:enable"]:
-        # Once bazel < 5.0 is not supported we can return an empty dict here
-        return {
-            "//command_line_option:platforms": settings["//command_line_option:platforms"],
-            "@io_bazel_rules_docker//platforms:image_transition_cpu": "//plaftorms:image_transition_cpu_unset",
-            "@io_bazel_rules_docker//platforms:image_transition_os": "//plaftorms:image_transition_os_unset",
-        }
+        # Return an empty dict to avoid changing the configuration hash.
+        # The previous code set image_transition_cpu/os to "unset" sentinel
+        # values which, while semantically a no-op, created a distinct
+        # configuration that doubled every compile action in the graph.
+        # Requires Bazel 5+ (empty transition dicts are a no-op).
+        return {}
 
     return {
         "//command_line_option:platforms": "@io_bazel_rules_docker//platforms:image_transition",
