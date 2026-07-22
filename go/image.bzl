@@ -89,7 +89,7 @@ STATIC_DEFAULT_BASE = select({
     "//conditions:default": "@go_image_static//image",
 })
 
-def go_image(name, base = None, tag_name = None, deps = [], layers = [], env = {}, binary = None, **kwargs):
+def go_image(name, base = None, tag_name = None, deps = [], layers = [], env = {}, binary = None, creation_time = None, **kwargs):
     """Constructs a container image wrapping a go_binary target.
 
   Args:
@@ -99,6 +99,7 @@ def go_image(name, base = None, tag_name = None, deps = [], layers = [], env = {
     layers: Augments "deps" with dependencies that should be put into their own layers.
     env: Environment variables for the go_image.
     binary: An alternative binary target to use instead of generating one.
+    creation_time: The image creation timestamp. Supports stamp variables.
     **kwargs: See go_binary.
   """
     if layers:
@@ -115,8 +116,8 @@ def go_image(name, base = None, tag_name = None, deps = [], layers = [], env = {
 
     tags = kwargs.get("tags", None)
     for index, dep in enumerate(layers):
-        base = app_layer(name = "%s.%d" % (name, index), base = base, dep = dep, tags = tags)
-        base = app_layer(name = "%s.%d-symlinks" % (name, index), base = base, dep = dep, binary = binary, tags = tags)
+        base = app_layer(name = "%s.%d" % (name, index), base = base, creation_time = creation_time, dep = dep, tags = tags)
+        base = app_layer(name = "%s.%d-symlinks" % (name, index), base = base, binary = binary, creation_time = creation_time, dep = dep, tags = tags)
 
     visibility = kwargs.get("visibility", None)
     restricted_to = kwargs.get("restricted_to", None)
@@ -130,6 +131,7 @@ def go_image(name, base = None, tag_name = None, deps = [], layers = [], env = {
         visibility = visibility,
         tags = tags,
         args = kwargs.get("args"),
+        creation_time = creation_time,
         data = kwargs.get("data"),
         testonly = kwargs.get("testonly"),
         restricted_to = restricted_to,
